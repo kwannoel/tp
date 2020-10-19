@@ -178,6 +178,17 @@ All of these details and interactions are captured in the sequence diagram below
 
 ![ListStudentSequenceDiagram](images/FindStudentSequenceDiagram.png)
 
+### Create Student data
+
+`TAsker` now supports creating student data as well. We extended `TAsker` with 2 relevant fields,
+`MatricNumber` and `Telegram` which track their matriculation numbers and Telegram handles respectively.
+
+Step 1. User enters the command to create a student <TODO include sample command>.
+<Show diagram for how the address book gets updated>
+
+To ensure the correct fields are included, 
+we have introduced regexes for Matriculation numbers and telegram handles which perform the validation for us.
+
 ### \[Proposed\] Undo/redo feature
 
 #### Proposed Implementation
