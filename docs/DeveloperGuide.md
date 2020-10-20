@@ -183,11 +183,116 @@ All of these details and interactions are captured in the sequence diagram below
 `TAsker` now supports creating student data as well. We extended `TAsker` with 2 relevant fields,
 `MatricNumber` and `Telegram` which track their matriculation numbers and Telegram handles respectively.
 
-Step 1. User enters the command to create a student <TODO include sample command>.
-<Show diagram for how the address book gets updated>
+##### Using regexes to validate our fields
 
 To ensure the correct fields are included, 
-we have introduced regexes for Matriculation numbers and telegram handles which perform the validation for us.
+we have introduced regexes for Matriculation numbers and telegram handles
+ which perform the validation for us.
+ 
+- Matriculation number validation regex
+    ```
+    ^A\\d{7}[A-Z]$
+    ```
+  `^` means to match from the start of the line.
+  
+  `A` means the first letter should be 'A'.
+  
+  `\\d{7}` means there should be 7 digits from 0 to 9. 
+  Note that Java uses `\\d` rather than `\d` to escape the `\` character from the string.
+  
+  `[A-Z]` means that the last character should be one of A to Z.
+
+- Telegram handle validation regex
+    ```
+    ^[a-zA-Z0-9_-]{5,32}$
+    ```
+  
+   `^` means to match from the start of the line.
+   
+   `[a-zA-Z0-9_-]` means we accept alphanumeric characters, including capital letters. We also accept `-` and `-`.
+   
+   `[...]{5, 32}` means we expect the string to contain between 5 to 32 (inclusive) of the above characters.
+
+Implementing this is rather straightforward since we can reference other fields (`address`, `name`, ...) we use. 
+
+##### Builder pattern
+
+Another notable aspect is the [`Builder` pattern](https://en.wikipedia.org/wiki/Builder_patternhttps://en.wikipedia.org/wiki/Builder_pattern) we use for tests.
+
+Thanks to this abstraction, refactoring tests for `Person` was relatively straightforward.
+
+To illustrate this, suppose we have a test using `Person` class.
+
+```java
+class Test {
+  test() {
+     // Person with valid name
+     assertEq(parsePerson("James,james@abc.xyz"), new Person("James", "james@abc.xyz"));
+     // Person with valid email
+     assertEq(parsePerson("Zack,zack@abc.xyz"), new Person("Zack", "zack@abc.xyz"));
+  }
+}
+```
+
+Now we add the two fields, `MatricNumber` and `Telegram` to `Person` and we have to update our tests:
+```java
+class Test {
+  test() {
+     // Person with valid name
+     assertEq(
+         parsePerson("James,james@abc.xyz"),
+         new Person("James", "james@abc.xyz", "A0001111B", "james_lee") // Update 1
+     );
+     // Person with valid email
+     assertEq(
+         parsePerson("Zack,zack@abc.xyz"),
+         new Person("Zack", "zack@abc.xyz", "A0002222B", "zack_koh") // Update 2
+     );
+  }
+}
+```
+
+Note that we had to update at 2 areas with mock `MatricNumber` and `Telegram` handle.
+We are only concerned about valid name and email, so we shouldn't have to update these!
+
+`PersonBuilder` introduces default values for fields we don't want to test.
+
+With `PersonBuilder`:
+```java
+class Test {
+  test() {
+     // Person with valid name
+     assertEq(
+         parsePerson("James,james@abc.xyz"),
+         new PersonBuilder.addName("James").addEmail("james@abc.xyz").build()
+     );
+     // Person with valid email
+     assertEq(
+         parsePerson("Zack,zack@abc.xyz"),
+         new PersonBuilder.addName("Zack").addEmail("zack@abc.xyz").build()
+     );
+  }
+}
+```
+
+After we add `MatricNumber` and `Telegram` fields in `Person` we can update `PersonBuilder` with these:
+
+```java
+class PersonBuilder {
+    // ...
+
+    PersonBuilder() {
+        // ...
+        matricNumber = DEFAULT_MATRIC_NUMBER;
+        telegram = DEFAULT_TELEGRAM;
+    }
+
+    Person addMatricNumber(String matricNumber) { /* ... */ }
+    Person addTelegram(String telegram) { /* ... */ }
+}
+```
+
+All our existing tests using `PersonBuilder` will still work, and all we had to do was update definitions in `PersonBuilder`.
 
 ### \[Proposed\] Undo/redo feature
 
