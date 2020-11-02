@@ -2,7 +2,6 @@ package seedu.address.logic.parser;
 
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.commands.CommandTestUtil.ATTENDANCE_DESC_AMY;
-import static seedu.address.logic.commands.CommandTestUtil.INVALID_ATTENDANCE_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_ATTENDANCE_AMY;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
@@ -47,11 +46,6 @@ public class UnattendCommandParserTest {
 
         // invalid prefix being parsed as preamble
         assertParseFailure(parser, "1 i/ string", MESSAGE_INVALID_FORMAT);
-    }
-
-    @Test
-    public void parse_invalidValue_failure() {
-        assertParseFailure(parser, "1" + INVALID_ATTENDANCE_DESC, Attendance.MESSAGE_CONSTRAINTS); // invalid attendance
     }
 
     @Test
