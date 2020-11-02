@@ -56,6 +56,19 @@ TAsker is a **desktop app for Teaching Assistants (TAs) to manage student admini
 
 - Parameters can be in any order.<br>
   e.g. if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
+  
+- Any invalid parameter tags will be parsed as literals.<br>
+  e.g. If we pass the `n/a/James` in as a parameter, 
+  since `a/` is an invalid parameter tag,
+  it will attempt to interpret `a/James` as a `NAME`,
+  rather than treating `a/` as a parameter tag and `James` as its field.
+  
+- Extra inputs to commands will be ignored. <br>
+  e.g. 
+
+  - `list 1`, `1` will be ignored, 
+
+  - `exit abc`, `abc` will be ignored.
 
 </div>
 
