@@ -36,7 +36,7 @@ public class ParserUtil {
     public static Index parseIndex(String oneBasedIndex) throws ParseException {
         String trimmedIndex = oneBasedIndex.trim();
         if (!StringUtil.isNonZeroUnsignedInteger(trimmedIndex)) {
-            throw new ParseException(MESSAGE_INVALID_INDEX);
+            throw parseException(trimmedIndex, MESSAGE_INVALID_INDEX);
         }
         return Index.fromOneBased(Integer.parseInt(trimmedIndex));
     }
@@ -51,7 +51,7 @@ public class ParserUtil {
         requireNonNull(name);
         String trimmedName = name.trim();
         if (!Name.isValidName(trimmedName)) {
-            throw new ParseException(Name.MESSAGE_CONSTRAINTS);
+            throw parseException(trimmedName, Name.MESSAGE_CONSTRAINTS);
         }
         return new Name(trimmedName);
     }
@@ -96,7 +96,7 @@ public class ParserUtil {
         requireNonNull(phone);
         String trimmedPhone = phone.trim();
         if (!Phone.isValidPhone(trimmedPhone)) {
-            throw new ParseException(Phone.MESSAGE_CONSTRAINTS);
+            throw parseException(phone, Phone.MESSAGE_CONSTRAINTS);
         }
         return new Phone(trimmedPhone);
     }
@@ -110,7 +110,7 @@ public class ParserUtil {
         requireNonNull(email);
         String trimmedEmail = email.trim();
         if (!Email.isValidEmail(trimmedEmail)) {
-            throw new ParseException(Email.MESSAGE_CONSTRAINTS);
+            throw parseException(trimmedEmail, Email.MESSAGE_CONSTRAINTS);
         }
         return new Email(trimmedEmail);
     }
@@ -140,7 +140,7 @@ public class ParserUtil {
         requireNonNull(telegram);
         String trimmedTelegram = telegram.trim();
         if (!Telegram.isValidTelegram(telegram)) {
-            throw new ParseException(Telegram.MESSAGE_CONSTRAINTS);
+            throw parseException(trimmedTelegram, Telegram.MESSAGE_CONSTRAINTS);
         }
         return new Telegram(trimmedTelegram);
     }
@@ -155,7 +155,7 @@ public class ParserUtil {
         requireNonNull(matricNumber);
         String trimmedMatricNumber = matricNumber.trim();
         if (!MatricNumber.isValidMatricNumber(trimmedMatricNumber)) {
-            throw new ParseException(MatricNumber.MESSAGE_CONSTRAINTS);
+            throw parseException(trimmedMatricNumber, MatricNumber.MESSAGE_CONSTRAINTS);
         }
         return new MatricNumber(trimmedMatricNumber);
     }
@@ -170,7 +170,7 @@ public class ParserUtil {
         requireNonNull(tag);
         String trimmedTag = tag.trim();
         if (!Tag.isValidTagName(trimmedTag)) {
-            throw new ParseException(Tag.MESSAGE_CONSTRAINTS);
+            throw parseException(trimmedTag, Tag.MESSAGE_CONSTRAINTS);
         }
         return new Tag(trimmedTag);
     }
@@ -198,7 +198,7 @@ public class ParserUtil {
         try {
             return Attendance.fromDateString(input);
         } catch (IllegalArgumentException e) {
-            throw new ParseException(Attendance.MESSAGE_CONSTRAINTS);
+            throw parseException(input, Attendance.MESSAGE_CONSTRAINTS);
         }
     }
 
@@ -215,5 +215,14 @@ public class ParserUtil {
             throw new ParseException(Type.MESSAGE_CONSTRAINTS);
         }
         return new Type(trimmedType);
+    }
+
+    private static String inputIsWrong(String input, String message) {
+        return "Your input: \"" + input + "\" is incorrectly formatted.\n"
+                + "See below for further details:\n\n" + message;
+    }
+
+    private static ParseException parseException(String input, String message) {
+        return new ParseException(inputIsWrong(input, message));
     }
 }
