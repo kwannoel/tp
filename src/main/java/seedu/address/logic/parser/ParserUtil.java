@@ -217,12 +217,12 @@ public class ParserUtil {
         return new Type(trimmedType);
     }
 
-    private static String inputIsWrong(String input, String message) {
+    private static String returnsWrongInput(String input, String message) {
         return "Your input: \"" + input + "\" is incorrectly formatted.\n"
                 + "See below for further details:\n\n" + message;
     }
 
     private static ParseException parseException(String input, String message) {
-        return new ParseException(inputIsWrong(input, message));
+        return new ParseException(returnsWrongInput(input, message));
     }
 }

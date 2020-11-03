@@ -4,7 +4,6 @@ import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT
 import static seedu.address.logic.commands.CommandTestUtil.DAY_DESC_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_ADDRESS_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_DAY_DESC;
-import static seedu.address.logic.commands.CommandTestUtil.INVALID_NAME_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_TIME_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_TYPE_DESC;
 import static seedu.address.logic.commands.CommandTestUtil.LOCATION_DESC_BOB;
@@ -31,7 +30,6 @@ import seedu.address.model.consultation.Day;
 import seedu.address.model.consultation.Time;
 import seedu.address.model.consultation.Type;
 import seedu.address.model.person.Address;
-import seedu.address.model.person.Name;
 import seedu.address.testutil.ConsultationBuilder;
 
 
@@ -81,11 +79,6 @@ public class AddConsultParserTest {
 
     @Test
     public void parse_invalidValue_failure() {
-        // invalid name
-        assertParseFailure(parser, INVALID_NAME_DESC + DAY_DESC_BOB
-                        + TIME_DESC_BOB + LOCATION_DESC_BOB + TYPE_DESC_BOB,
-                Name.MESSAGE_CONSTRAINTS);
-
         // invalid day
         assertParseFailure(parser, NAME_DESC_BOB + INVALID_DAY_DESC
                         + TIME_DESC_BOB + LOCATION_DESC_BOB + TYPE_DESC_BOB,
