@@ -3,9 +3,9 @@ package seedu.address.model.attendance;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
 /**
@@ -14,16 +14,22 @@ import java.util.Objects;
  */
 public class Attendance implements Comparable<Attendance> {
 
-    public static final String MESSAGE_CONSTRAINTS = "Accepted date format: dd/MM/yyyy (e.g. 27/03/1998)";
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+    public static final String MESSAGE_CONSTRAINTS = "Accepted date format: dd/MM/yyyy (e.g. 27/03/1998)."
+            + "\n"
+            + "Day should be in the range 1-31"
+            + "\n"
+            + "Month should be 01-12"
+            + "\n"
+            + "Year should be a 4 digit numeric value, with the exception of 0000";
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    public final Date date;
+    public final LocalDate date;
 
     /**
-     * Creates a new {@code Attendance} using a {@code Date}
-     * @param date {@code Date} that corresponds to input date
+     * Creates a new {@code Attendance} using a {@code LocalDate}
+     * @param date {@code LocalDate} that corresponds to input date
      */
-    public Attendance(Date date) {
+    public Attendance(LocalDate date) {
         assert date != null;
         this.date = date;
     }
@@ -36,10 +42,10 @@ public class Attendance implements Comparable<Attendance> {
      */
     public static Attendance fromDateString(String input) {
         requireNonNull(input);
-        Date date;
+        LocalDate date;
         try {
-            date = DATE_FORMAT.parse(input);
-        } catch (ParseException e) {
+            date = LocalDate.parse(input, DATE_FORMAT);
+        } catch (DateTimeParseException e) {
             checkArgument(false, MESSAGE_CONSTRAINTS);
             return null; // Never triggers as the above will throw an invalid argument exception
         }

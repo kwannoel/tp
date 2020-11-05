@@ -52,7 +52,7 @@ public class ShowAttendanceCommand extends Command {
         }
         if (attendance == null) {
             throw new CommandException(
-                    String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, AttendCommand.MESSAGE_USAGE));
+                    String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, MESSAGE_USAGE));
         }
 
         Person person = lastShownList.get(targetIndex.getZeroBased());
