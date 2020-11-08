@@ -25,7 +25,7 @@ public class AddCommand extends Command {
             + PREFIX_PHONE + "PHONE "
             + PREFIX_EMAIL + "EMAIL "
             + PREFIX_MATRIC_NUMBER + "MATRIC_NUMBER "
-            + "[" + PREFIX_TELEGRAM + "TELEGRAM_HANDLE] "
+            + PREFIX_TELEGRAM + "TELEGRAM_HANDLE "
             + "[" + PREFIX_TAG + "TAG]...\n"
             + "Example: " + COMMAND_WORD + " "
             + PREFIX_NAME + "John Doe "
