@@ -1,5 +1,6 @@
 package seedu.address.logic.parser;
 
+import static seedu.address.commons.core.Messages.MESSAGE_DUPLICATE_PREFIXES;
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.commands.CommandTestUtil.DAY_DESC_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.INVALID_ADDRESS_DESC;
@@ -18,6 +19,7 @@ import static seedu.address.logic.commands.CommandTestUtil.VALID_LOCATION_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_NAME_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TIME_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_TYPE_BOB;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 import static seedu.address.testutil.TypicalConsults.GROUP_CONSULT;
@@ -46,10 +48,17 @@ public class AddConsultParserTest {
                         + TIME_DESC_BOB + LOCATION_DESC_BOB + TYPE_DESC_BOB,
                 new AddConsultCommand(expectedPerson));
 
-        // multiple names - last name accepted
-        assertParseSuccess(parser, NAME_DESC_AMY + NAME_DESC_BOB + DAY_DESC_BOB
+        assertParseSuccess(parser, NAME_DESC_BOB + DAY_DESC_BOB
                         + TIME_DESC_BOB + LOCATION_DESC_BOB + TYPE_DESC_BOB,
                 new AddConsultCommand(expectedPerson));
+    }
+
+    @Test
+    public void parse_duplicateFieldsPresent_failure() {
+        // multiple names - name flagged as duplicate
+        assertParseFailure(parser, NAME_DESC_AMY + NAME_DESC_BOB + DAY_DESC_BOB
+                        + TIME_DESC_BOB + LOCATION_DESC_BOB + TYPE_DESC_BOB,
+                String.format(MESSAGE_DUPLICATE_PREFIXES, PREFIX_NAME));
     }
 
     @Test
