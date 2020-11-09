@@ -92,6 +92,26 @@ public class Consultation {
     }
 
     /**
+     * Returns true if a Group consultation is added on the same time & day as another consultation.
+     *
+     * @param consultation Consultation to be added.
+     * @return Presence of conflicting consultation.
+     */
+    public boolean isGroupConsultationOnSameTimingAndDifferentLocation(Consultation consultation) {
+        if (consultation == this) {
+            return true;
+        }
+
+        // Group consultations can have same timing, but they must have the same location.
+        return consultation != null
+                && (consultation.getType().type.equals(ConsultationType.GROUP)
+                || getType().type.equals(ConsultationType.GROUP))
+                && consultation.getDate().equals(getDate())
+                && consultation.getTime().equals(getTime())
+                && !consultation.getLocation().equals(getLocation());
+    }
+
+    /**
      * Returns true if both consultation have the same data fields.
      * This defines a stronger notion of equality between two persons.
      *

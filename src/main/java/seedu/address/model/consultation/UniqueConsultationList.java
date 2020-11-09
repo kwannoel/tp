@@ -8,6 +8,7 @@ import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import seedu.address.model.consultation.exceptions.ConflictingGroupConsultationException;
 import seedu.address.model.consultation.exceptions.ConflictingPersonalConsultationException;
 import seedu.address.model.consultation.exceptions.ConsultationNotFoundException;
 import seedu.address.model.consultation.exceptions.DuplicateConsultationException;
@@ -59,7 +60,10 @@ public class UniqueConsultationList implements Iterable<Consultation> {
      * @param toAdd Consultation to add to the list.
      * @throws DuplicateConsultationException If consultation was already present.
      */
-    public void add(Consultation toAdd) {
+    public void add(Consultation toAdd) throws
+            DuplicateConsultationException,
+            ConflictingPersonalConsultationException,
+            ConflictingGroupConsultationException {
         requireNonNull(toAdd);
         if (contains(toAdd)) {
             throw new DuplicateConsultationException();
@@ -68,7 +72,15 @@ public class UniqueConsultationList implements Iterable<Consultation> {
         if (hasConflictingPersonalConsult(toAdd)) {
             throw new ConflictingPersonalConsultationException();
         }
+        // conflicting group consultation
+        if (hasConflictingGroupConsultation(toAdd)) {
+            throw new ConflictingGroupConsultationException();
+        }
         internalConsults.add(toAdd);
+    }
+
+    private boolean hasConflictingGroupConsultation(Consultation consultation) {
+        return internalConsults.stream().anyMatch(consultation::isGroupConsultationOnSameTimingAndDifferentLocation);
     }
 
     /**

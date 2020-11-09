@@ -10,6 +10,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_TYPE;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.consultation.Consultation;
+import seedu.address.model.consultation.exceptions.ConflictingGroupConsultationException;
 
 /**
  * Represents the command that is used to list all consultations, in classes.
@@ -33,6 +34,8 @@ public class AddConsultCommand extends Command {
 
     public static final String MESSAGE_SUCCESS = "New consultation added: %1$s";
     public static final String MESSAGE_DUPLICATE_CONSULTATION = "This consultation slot has already been taken up!";
+    public static final String MESSAGE_WRONG_LOCATION_GROUP_CONSULTATION =
+            "Group consultations sharing the same time slot should be at the same location!";
 
     private final Consultation toAdd;
 
@@ -54,7 +57,12 @@ public class AddConsultCommand extends Command {
             throw new CommandException(MESSAGE_DUPLICATE_CONSULTATION);
         }
 
-        model.addConsultation(toAdd);
+        try {
+            model.addConsultation(toAdd);
+        } catch (ConflictingGroupConsultationException e) {
+            throw new CommandException(MESSAGE_WRONG_LOCATION_GROUP_CONSULTATION);
+        }
+
         return new CommandResult(String.format(MESSAGE_SUCCESS, toAdd));
     }
 
